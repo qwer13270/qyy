@@ -3,7 +3,9 @@ const fs = require('node:fs');
 const path = require('node:path');
 const root = path.join(__dirname, 'dist');
 http.createServer((req, res) => {
-  const pathname = new URL(req.url, 'http://localhost').pathname;
+  let pathname;
+  try { pathname = new URL(req.url, 'http://localhost').pathname; }
+  catch { res.writeHead(400); res.end('Bad request'); return; }
   const files = { '/': ['index.html', 'text/html'], '/styles.css': ['styles.css', 'text/css'] };
   const asset = files[pathname];
   if (!asset) { res.writeHead(404); res.end('Not found'); return; }
